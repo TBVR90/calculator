@@ -9,7 +9,18 @@ var operatorValue= ""
 var secondValue = ""
 var result = ""
 
-const num = ["1", "2", "3", "4" , "5", "6", "7", "8", "9", "0"]
+const num = ["1", "2", "3", "4" , "5", "6", "7", "8", "9", "0","Enter", "Delete", "Backspace", "/", "*", "-", "+", "."]
+window.addEventListener("keydown", debug)
+
+function debug(event) {
+    if(num.includes(event.key)){
+        console.log(event.key)
+        main(event.key)
+        return
+    }
+    console.log("not included", event.key)
+    
+}
 
 
 
@@ -25,17 +36,27 @@ function clear() {
 function getValue(event){
     
     let value = event.target.value
-    
+    main(value)
+}
+
+function main(value){
     switch(value){
 
-        case "c":
+        case "Backspace":
+            
+            if(display.innerHTML !== ""){
+                let result = display.innerHTML.slice(0, -1);
+                console.log(result)
+                display.innerHTML = result
+            }
+            break;
             
 
 
-        case "A/C":
+        case "Delete":
             clear()
             break;
-        case "/": case"*":case"-":case"+":
+        case "/": case"*":case"+":
             if(firstValue === ""){
                 firstValue = parseInt(display.innerHTML)
                 operatorValue = value
@@ -51,9 +72,46 @@ function getValue(event){
                 console.log(secondValue)
                 console.log(operatorValue)
 
+            }
+            else if(firstValue !== "" && operatorValue !== ""){
+                secondValue = parseFloat(display.innerHTML)
+                
+                submit(firstValue, secondValue, operatorValue)
+
             }       
             break;
-        case "enter":
+
+        case "-":
+            if(display.innerHTML === ""){
+                display.innerHTML += value
+            }
+            else{
+                if(firstValue === ""){
+                    firstValue = parseInt(display.innerHTML)
+                    operatorValue = value
+                    display.innerHTML = ""            
+                    console.log("if", firstValue)
+                    console.log(secondValue)
+                    console.log(operatorValue)
+                }
+                else if(firstValue !== "" && operatorValue === ""){
+                    operatorValue = value
+                    display.innerHTML = ""
+                    console.log("else", firstValue)
+                    console.log(secondValue)
+                    console.log(operatorValue)
+                }
+                else if(firstValue !== "" && operatorValue !== ""){
+                    console.log("test1")
+                    secondValue = parseFloat(display.innerHTML)
+                    
+                    
+                    submit(firstValue, secondValue, operatorValue)
+
+                }       
+        }
+            break
+        case "Enter":
             if(firstValue !== "" && operatorValue !== "" && display.innerHTML !==""){
                 secondValue = parseFloat(display.innerHTML)
                 
@@ -71,7 +129,7 @@ function getValue(event){
 
         
         default:
-            if(display.innerHTML === ""){
+            if(display.innerHTML === "" && value !== "Backspace"){
                 display.innerHTML = ""
             }
             display.innerHTML += value
@@ -80,6 +138,7 @@ function getValue(event){
     }
     
 }
+
     
 function submit(a, b, c){
     
